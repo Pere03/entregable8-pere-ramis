@@ -7,30 +7,30 @@ using UnityEngine.UI;
 public class AudioManager : MonoBehaviour
 {
     public AudioClip[] Musica;
-    private AudioSource fuente;
+    private AudioSource source;
 
-    private int currentTrack;
+    private int CancionActual;
 
     public Text TituloCancion;
     private int FullLenght;
     
     void Start()
     {
-        fuente = GetComponent<AudioSource>();
+        source = GetComponent<AudioSource>();
     }
 
     //Con esto conseguimos que reproduzca la primera cancion de la array
     public void ReproducirMusica()
     {
-        if (fuente.isPlaying)
+        if (source.isPlaying)
         {
             return;
         }
 
-        currentTrack--;
-        if (currentTrack < 0)
+        CancionActual--;
+        if (CancionActual < 0)
         {
-            currentTrack = Musica.Length - 1;
+            CancionActual = Musica.Length - 1;
         }
         StartCoroutine("WaitForMusicEnd");
     }
@@ -38,7 +38,7 @@ public class AudioManager : MonoBehaviour
     //Con esto conseguimos que espere hasta que acabe de reproducirse la cancion, y que salte a la siguiente
     IEnumerator WaitForMusicEnd()
     {
-        while (fuente.isPlaying)
+        while (source.isPlaying)
         {
             yield return null;
         }
@@ -48,14 +48,14 @@ public class AudioManager : MonoBehaviour
     //Aqui conseguimos irnos a la siguiente cancion y que se reproduzca
     public void SiguienteCancion()
     {
-        fuente.Stop();
-        currentTrack++;
-        if (currentTrack > Musica.Length - 1)
+        source.Stop();
+        CancionActual++;
+        if (CancionActual > Musica.Length - 1)
         {
-            currentTrack = 0;
+            CancionActual = 0;
         }
-        fuente.clip = Musica[currentTrack];
-        fuente.Play();
+        source.clip = Musica[CancionActual];
+        source.Play();
 
         MostarTitulo();
 
@@ -65,14 +65,14 @@ public class AudioManager : MonoBehaviour
     //Aqui conseguimos irnos a la anterior cancion y que se reproduzca
     public void AnteriorCancion()
     {
-        fuente.Stop();
-        currentTrack--;
-        if (currentTrack < 0)
+        source.Stop();
+        CancionActual--;
+        if (CancionActual < 0)
         {
-            currentTrack = Musica.Length - 1;
+            CancionActual = Musica.Length - 1;
         }
-        fuente.clip = Musica[currentTrack];
-        fuente.Play();
+        source.clip = Musica[CancionActual];
+        source.Play();
 
         MostarTitulo();
 
@@ -83,21 +83,21 @@ public class AudioManager : MonoBehaviour
     public void PausarMusica()
     {
         StopCoroutine("WaitForMusicEnd");
-        fuente.Pause();
+        source.Pause();
     }
 
     //Con esta funcion podemos mostrar el titulo de la cancion que se esta reproduciendo
     public void MostarTitulo()
     {
-        TituloCancion.text = fuente.clip.name;
-        FullLenght = (int)fuente.clip.length;
+        TituloCancion.text = source.clip.name;
+        FullLenght = (int)source.clip.length;
     }
 
     //Aqui conseguimos que se escoja una cancion aleatoria del array y que lo reproduzca
     public void CancionAleatoria()
     {
-        fuente.clip = Musica[Random.Range(0, Musica.Length)];
-        fuente.Play();
+        source.clip = Musica[Random.Range(0, Musica.Length)];
+        source.Play();
         MostarTitulo();
         StartCoroutine("WaitForMusicEnd");
     }
