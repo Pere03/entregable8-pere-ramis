@@ -19,22 +19,6 @@ public class AudioManager : MonoBehaviour
         source = GetComponent<AudioSource>();
     }
 
-    //Con esto conseguimos que reproduzca la primera cancion de la array
-    public void ReproducirMusica()
-    {
-        if (source.isPlaying)
-        {
-            return;
-        }
-
-        CancionActual--;
-        if (CancionActual < 0)
-        {
-            CancionActual = Musica.Length - 1;
-        }
-        StartCoroutine("WaitForMusicEnd");
-    }
-
     //Con esto conseguimos que espere hasta que acabe de reproducirse la cancion, y que salte a la siguiente
     IEnumerator WaitForMusicEnd()
     {
@@ -86,11 +70,20 @@ public class AudioManager : MonoBehaviour
         source.Pause();
     }
 
-    //Con esta funcion podemos mostrar el titulo de la cancion que se esta reproduciendo
-    public void MostarTitulo()
+    //Con esto conseguimos que reproduzca la primera cancion de la array
+    public void ReproducirMusica()
     {
-        TituloCancion.text = source.clip.name;
-        FullLenght = (int)source.clip.length;
+        if (source.isPlaying)
+        {
+            return;
+        }
+
+        CancionActual--;
+        if (CancionActual < 0)
+        {
+            CancionActual = Musica.Length - 1;
+        }
+        StartCoroutine("WaitForMusicEnd");
     }
 
     //Aqui conseguimos que se escoja una cancion aleatoria del array y que lo reproduzca
@@ -100,5 +93,12 @@ public class AudioManager : MonoBehaviour
         source.Play();
         MostarTitulo();
         StartCoroutine("WaitForMusicEnd");
+    }
+
+    //Con esta funcion podemos mostrar el titulo de la cancion que se esta reproduciendo
+    public void MostarTitulo()
+    {
+        TituloCancion.text = source.clip.name;
+        FullLenght = (int)source.clip.length;
     }
 }
